@@ -1,0 +1,86 @@
+/* Stock Trading Plugin - Admin Styles */
+
+.stock-trading-info {
+    margin-top: 30px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.stock-trading-info h2 {
+    margin-top: 0;
+    color: #23282d;
+    font-size: 18px;
+}
+
+.stock-trading-info p {
+    margin: 10px 0;
+    color: #555d66;
+}
+
+.stock-trading-info code {
+    display: block;
+    padding: 15px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+/* Settings Form */
+.form-table th {
+    padding: 20px 10px 20px 0;
+}
+
+.form-table td {
+    padding: 15px 10px;
+}
+
+.form-table input[type="text"],
+.form-table input[type="number"] {
+    width: 100%;
+    max-width: 400px;
+}
+
+.form-table select {
+    min-width: 200px;
+}
+
+.form-table .description {
+    margin-top: 5px;
+    font-size: 13px;
+    color: #646970;
+}
+
+/* Widget Admin Styles */
+.widget .widget-content p {
+    margin: 10px 0;
+}
+
+.widget .widget-content label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.widget .widget-content input[type="text"] {
+    width: 100%;
+}
+
+/* Dashboard Widget */
+.stock-trading-dashboard-widget {
+    padding: 12px;
+}
+
+.stock-trading-dashboard-widget .stock-rates-table {
+    margin: 0;
+}
+
+.stock-trading-dashboard-widget .stock-rates-table thead th {
+    background: #f0f0f1;
+    color: #1d2327;
+}
