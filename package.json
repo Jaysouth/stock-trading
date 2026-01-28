@@ -1,0 +1,32 @@
+{
+  "name": "smartfx-hub",
+  "version": "1.0.0",
+  "description": "SmartFX Hub - Multi-Module Forex Trading Platform",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "forex",
+    "trading",
+    "ai-trading",
+    "group-trading",
+    "fintech"
+  ],
+  "author": "SmartFX Hub Team",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.5",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0"
+  }
+}
