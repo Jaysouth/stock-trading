@@ -426,7 +426,7 @@ exports.getStatistics = async (req, res) => {
           total: trades.length,
           winTrades,
           lossTrades: trades.length - winTrades,
-          winRate: trades.length > 0 ? ((winTrades / trades.length) * 100).toFixed(2) : 0,
+          winRate: trades.length > 0 ? ((winTrades / trades.length) * 100).toFixed(2) : '0.00',
           totalProfit: totalProfit.toFixed(2),
           totalLoss: Math.abs(totalLoss).toFixed(2),
           netProfit: (totalProfit + totalLoss).toFixed(2)

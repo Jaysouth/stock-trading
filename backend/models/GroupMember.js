@@ -83,8 +83,11 @@ const groupMemberSchema = new mongoose.Schema({
 
 // Update win rate on save
 groupMemberSchema.pre('save', function(next) {
-  if (this.winTrades + this.lossTrades > 0) {
-    this.winRate = (this.winTrades / (this.winTrades + this.lossTrades)) * 100;
+  const totalTrades = this.winTrades + this.lossTrades;
+  if (totalTrades > 0) {
+    this.winRate = (this.winTrades / totalTrades) * 100;
+  } else {
+    this.winRate = 0;
   }
   next();
 });

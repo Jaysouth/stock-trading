@@ -260,7 +260,9 @@ exports.getPerformance = async (req, res) => {
     const totalLoss = closedTrades.reduce((sum, t) => sum + Math.min(0, t.profitLoss), 0);
     const netProfit = totalProfit + totalLoss;
 
-    const winRate = closedTrades.length > 0 ? (winTrades.length / closedTrades.length) * 100 : 0;
+    const winRate = closedTrades.length > 0 
+      ? ((winTrades.length / closedTrades.length) * 100).toFixed(2)
+      : '0.00';
 
     // Get config for drawdown
     const config = await AITradingConfig.findOne({ user: req.user.id });
