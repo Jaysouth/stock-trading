@@ -71,10 +71,16 @@ app.use((req, res) => {
 
 // Error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  // Log error for debugging (use proper logging service in production)
+  if (process.env.NODE_ENV === 'development') {
+    console.error(err.stack);
+  }
+  
   res.status(err.statusCode || 500).json({
     success: false,
-    message: err.message || 'Server Error'
+    message: process.env.NODE_ENV === 'production' 
+      ? 'An error occurred. Please try again.' 
+      : err.message
   });
 });
 

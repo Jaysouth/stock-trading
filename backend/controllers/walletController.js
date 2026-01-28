@@ -41,6 +41,15 @@ exports.deposit = async (req, res) => {
       });
     }
 
+    // Maximum deposit limit for security
+    const MAX_DEPOSIT = 1000000; // $1M per transaction
+    if (amount > MAX_DEPOSIT) {
+      return res.status(400).json({
+        success: false,
+        message: `Maximum deposit amount is ${MAX_DEPOSIT}`
+      });
+    }
+
     // Create transaction
     const transaction = await Transaction.create({
       user: req.user.id,
@@ -89,13 +98,18 @@ exports.withdraw = async (req, res) => {
       });
     }
 
-    // Check available balance (trading + profit + referral - frozen)
-    const availableBalance = wallet.tradingBalance + wallet.profitBalance + wallet.referralBalance - wallet.frozenAmount;
+    // Calculate available balance considering allocations
+    const totalAllocated = wallet.aiTradingAllocation + 
+                          wallet.groupTradingAllocation + 
+                          wallet.selfTradingAllocation;
+    
+    const availableBalance = wallet.tradingBalance + wallet.profitBalance + 
+                            wallet.referralBalance - wallet.frozenAmount - totalAllocated;
 
     if (amount > availableBalance) {
       return res.status(400).json({
         success: false,
-        message: 'Insufficient balance'
+        message: `Insufficient available balance. Available: ${availableBalance.toFixed(2)}`
       });
     }
 
@@ -272,15 +286,20 @@ exports.allocateCapital = async (req, res) => {
       });
     }
 
-    if (amount > wallet.tradingBalance) {
+    // Calculate available (non-allocated) trading balance
+    const totalAllocated = wallet.aiTradingAllocation + 
+                          wallet.groupTradingAllocation + 
+                          wallet.selfTradingAllocation;
+    const availableBalance = wallet.tradingBalance - totalAllocated;
+
+    if (amount > availableBalance) {
       return res.status(400).json({
         success: false,
-        message: 'Insufficient trading balance'
+        message: `Insufficient available balance. Available: ${availableBalance.toFixed(2)}`
       });
     }
 
     // Allocate
-    wallet.tradingBalance -= amount;
     wallet[`${module}Allocation`] += amount;
     await wallet.save();
 

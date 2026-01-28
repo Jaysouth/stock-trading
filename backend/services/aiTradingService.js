@@ -31,6 +31,11 @@ class AITradingService {
     let avgGain = gains / period;
     let avgLoss = losses / period;
 
+    // Handle division by zero
+    if (avgLoss === 0) {
+      return avgGain === 0 ? 50 : 100; // If no losses and no gains = neutral, if gains but no losses = 100
+    }
+
     // Calculate RSI
     const rs = avgGain / avgLoss;
     const rsi = 100 - (100 / (1 + rs));
