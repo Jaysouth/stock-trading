@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { walletService, bankAccountService, transactionService } from '../services/api';
+import { walletService, bankAccountService, transactionService, authService } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
