@@ -109,15 +109,21 @@ class Stock_Trading_Admin_Settings {
         }
 
         if ( isset( $input['update_interval'] ) ) {
-            $sanitized['update_interval'] = absint( $input['update_interval'] );
+            $interval = absint( $input['update_interval'] );
+            // Enforce minimum 30 seconds, maximum 3600 seconds.
+            $sanitized['update_interval'] = max( 30, min( 3600, $interval ) );
         }
 
         if ( isset( $input['default_currency'] ) ) {
-            $sanitized['default_currency'] = sanitize_text_field( $input['default_currency'] );
+            $currency = sanitize_text_field( $input['default_currency'] );
+            $allowed_currencies = array( 'USD', 'EUR', 'GBP', 'JPY' );
+            $sanitized['default_currency'] = in_array( $currency, $allowed_currencies, true ) ? $currency : 'USD';
         }
 
         if ( isset( $input['display_mode'] ) ) {
-            $sanitized['display_mode'] = sanitize_text_field( $input['display_mode'] );
+            $mode = sanitize_text_field( $input['display_mode'] );
+            $allowed_modes = array( 'table', 'list', 'cards' );
+            $sanitized['display_mode'] = in_array( $mode, $allowed_modes, true ) ? $mode : 'table';
         }
 
         return $sanitized;

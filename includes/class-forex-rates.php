@@ -31,6 +31,12 @@ class Stock_Trading_Forex_Rates {
 
         $symbols = isset( $_POST['symbols'] ) ? sanitize_text_field( $_POST['symbols'] ) : 'EURUSD,GBPUSD,USDJPY';
         $symbols_array = array_map( 'trim', explode( ',', $symbols ) );
+        
+        // Validate symbols against allowed pairs.
+        $available_pairs = array_keys( self::get_available_pairs() );
+        $symbols_array = array_filter( $symbols_array, function( $symbol ) use ( $available_pairs ) {
+            return in_array( $symbol, $available_pairs, true );
+        } );
 
         $rates = $this->get_rates( $symbols_array );
 

@@ -170,18 +170,17 @@ class Stock_Trading_Plugin {
             'display_mode'      => 'table',
         );
         
-        add_option( 'stock_trading_options', $default_options );
-        
-        // Flush rewrite rules.
-        flush_rewrite_rules();
+        // Use update_option to ensure defaults are set even on reactivation.
+        if ( false === get_option( 'stock_trading_options' ) ) {
+            add_option( 'stock_trading_options', $default_options );
+        }
     }
 
     /**
      * Plugin deactivation.
      */
     public function deactivate() {
-        // Flush rewrite rules.
-        flush_rewrite_rules();
+        // Clean up if needed.
     }
 }
 

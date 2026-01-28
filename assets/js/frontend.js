@@ -14,6 +14,9 @@
             var refreshInterval = parseInt($container.data('refresh')) * 1000 || 60000;
             var symbols = $container.data('symbols') || '';
 
+            // Enforce minimum refresh interval of 30 seconds.
+            refreshInterval = Math.max(30000, refreshInterval);
+
             if (refreshInterval && symbols) {
                 setInterval(function() {
                     refreshRates($container, symbols);

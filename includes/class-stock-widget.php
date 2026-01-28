@@ -38,7 +38,7 @@ class Stock_Trading_Widget extends WP_Widget {
         echo $args['before_widget'];
 
         if ( ! empty( $instance['title'] ) ) {
-            echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
+            echo $args['before_title'] . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . $args['after_title'];
         }
 
         $symbols = ! empty( $instance['symbols'] ) ? $instance['symbols'] : 'EURUSD,GBPUSD,USDJPY';
