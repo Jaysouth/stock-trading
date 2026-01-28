@@ -335,7 +335,7 @@ Frontend:
 └── Custom CSS
 
 Backend:
-├── Django 4.2.7
+├── Django 4.2.26
 ├── Django REST Framework 3.14.0
 ├── PyOTP 2.9.0 (2FA)
 ├── qrcode 7.4.2 (QR generation)

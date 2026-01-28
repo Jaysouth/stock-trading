@@ -185,7 +185,7 @@ A comprehensive forex trading web application with a sophisticated wallet system
 ## 🛠 Technology Stack
 
 ### Backend
-- **Framework**: Django 4.2.7
+- **Framework**: Django 4.2.26
 - **API**: Django REST Framework 3.14.0
 - **Database**: SQLite (dev) / PostgreSQL (prod ready)
 - **Authentication**: Session-based with Django auth
