@@ -236,6 +236,8 @@ router.post('/brokers/connect', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // NOTE: In production, the apiKey should be encrypted before storage
+    // and never returned in API responses. This is a prototype implementation.
     const connection = {
       id: `broker_${Date.now()}`,
       userId: 'user_1',
@@ -243,6 +245,7 @@ router.post('/brokers/connect', async (req: Request, res: Response) => {
       accountType,
       status: 'connected',
       connectedAt: new Date()
+      // apiKey is intentionally not included in the response for security
     };
 
     res.status(201).json({
@@ -250,6 +253,7 @@ router.post('/brokers/connect', async (req: Request, res: Response) => {
       connection
     });
   } catch (error) {
+    console.error('Broker connection error:', error);
     res.status(500).json({ error: 'Failed to connect to broker' });
   }
 });

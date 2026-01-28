@@ -12,6 +12,23 @@ router.post('/register', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    // Password validation
+    if (password.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters long' });
+    }
+
+    // Role validation
+    const validRoles = ['beginner', 'intermediate', 'professional'];
+    if (role && !validRoles.includes(role)) {
+      return res.status(400).json({ error: 'Invalid role. Must be: beginner, intermediate, or professional' });
+    }
+
     // In production, this would hash password and save to database
     const user = {
       id: `user_${Date.now()}`,
@@ -36,6 +53,7 @@ router.post('/register', async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
+    console.error('Registration error:', error);
     res.status(500).json({ error: 'Registration failed' });
   }
 });
@@ -62,6 +80,7 @@ router.post('/login', async (req: Request, res: Response) => {
       }
     });
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ error: 'Login failed' });
   }
 });
@@ -83,6 +102,7 @@ router.get('/profile', async (req: Request, res: Response) => {
 
     res.status(200).json({ user });
   } catch (error) {
+    console.error('Profile fetch error:', error);
     res.status(500).json({ error: 'Failed to fetch profile' });
   }
 });

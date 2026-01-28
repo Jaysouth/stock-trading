@@ -57,6 +57,22 @@ router.post('/sessions', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // Validate minContribution
+    if (typeof minContribution !== 'number' || minContribution <= 0) {
+      return res.status(400).json({ error: 'Minimum contribution must be a positive number' });
+    }
+
+    // Validate maxMembers
+    if (typeof maxMembers !== 'number' || maxMembers <= 0 || !Number.isInteger(maxMembers)) {
+      return res.status(400).json({ error: 'Maximum members must be a positive integer' });
+    }
+
+    // Validate strategy
+    const validStrategies = ['conservative', 'moderate', 'aggressive'];
+    if (!validStrategies.includes(strategy)) {
+      return res.status(400).json({ error: 'Invalid strategy. Must be: conservative, moderate, or aggressive' });
+    }
+
     const session = {
       id: `group_${Date.now()}`,
       name,
@@ -76,6 +92,7 @@ router.post('/sessions', async (req: Request, res: Response) => {
       session
     });
   } catch (error) {
+    console.error('Group creation error:', error);
     res.status(500).json({ error: 'Failed to create trading group' });
   }
 });
@@ -139,6 +156,11 @@ router.post('/sessions/:sessionId/join', async (req: Request, res: Response) => 
       return res.status(400).json({ error: 'Contribution amount is required' });
     }
 
+    // Validate contribution amount
+    if (typeof contribution !== 'number' || contribution <= 0) {
+      return res.status(400).json({ error: 'Contribution must be a positive number' });
+    }
+
     res.status(200).json({
       message: 'Successfully joined the trading group',
       sessionId,
@@ -146,6 +168,7 @@ router.post('/sessions/:sessionId/join', async (req: Request, res: Response) => 
       joinedAt: new Date()
     });
   } catch (error) {
+    console.error('Group join error:', error);
     res.status(500).json({ error: 'Failed to join trading group' });
   }
 });
@@ -195,8 +218,14 @@ router.post('/sessions/:sessionId/vote', async (req: Request, res: Response) => 
     const { sessionId } = req.params;
     const { tradeProposalId, vote } = req.body;
     
-    if (!tradeProposalId || !vote) {
+    if (!tradeProposalId || vote === undefined) {
       return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Validate vote
+    const validVotes = ['yes', 'no', true, false];
+    if (!validVotes.includes(vote)) {
+      return res.status(400).json({ error: 'Vote must be either "yes", "no", true, or false' });
     }
 
     res.status(200).json({
@@ -207,6 +236,7 @@ router.post('/sessions/:sessionId/vote', async (req: Request, res: Response) => 
       currentVotes: { yes: 2, no: 1 }
     });
   } catch (error) {
+    console.error('Vote recording error:', error);
     res.status(500).json({ error: 'Failed to record vote' });
   }
 });

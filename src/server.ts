@@ -57,18 +57,18 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
-// Error handling middleware
+// 404 handler - must come before error handling middleware
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ error: 'Not Found', path: req.path });
+});
+
+// Error handling middleware - must come last
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).json({
     error: 'Internal Server Error',
     message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
   });
-});
-
-// 404 handler
-app.use((req: Request, res: Response) => {
-  res.status(404).json({ error: 'Not Found', path: req.path });
 });
 
 // Start server

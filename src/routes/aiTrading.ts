@@ -32,6 +32,25 @@ router.put('/config', async (req: Request, res: Response) => {
   try {
     const { algorithm, riskLevel, maxTradeSize, stopLoss, takeProfit, enabled } = req.body;
     
+    // Validate riskLevel if provided
+    const validRiskLevels = ['low', 'medium', 'high'];
+    if (riskLevel && !validRiskLevels.includes(riskLevel)) {
+      return res.status(400).json({ error: 'Invalid risk level. Must be: low, medium, or high' });
+    }
+
+    // Validate numeric values
+    if (maxTradeSize !== undefined && (typeof maxTradeSize !== 'number' || maxTradeSize <= 0)) {
+      return res.status(400).json({ error: 'Max trade size must be a positive number' });
+    }
+
+    if (stopLoss !== undefined && (typeof stopLoss !== 'number' || stopLoss <= 0)) {
+      return res.status(400).json({ error: 'Stop loss must be a positive number' });
+    }
+
+    if (takeProfit !== undefined && (typeof takeProfit !== 'number' || takeProfit <= 0)) {
+      return res.status(400).json({ error: 'Take profit must be a positive number' });
+    }
+
     const updatedConfig = {
       userId: 'user_1',
       algorithm: algorithm || 'momentum_strategy',
@@ -47,6 +66,7 @@ router.put('/config', async (req: Request, res: Response) => {
       config: updatedConfig
     });
   } catch (error) {
+    console.error('AI config update error:', error);
     res.status(500).json({ error: 'Failed to update AI configuration' });
   }
 });

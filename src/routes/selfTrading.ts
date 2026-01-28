@@ -75,6 +75,26 @@ router.post('/positions', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // Validate type
+    if (type !== 'buy' && type !== 'sell') {
+      return res.status(400).json({ error: 'Type must be either "buy" or "sell"' });
+    }
+
+    // Validate amount
+    if (typeof amount !== 'number' || amount <= 0) {
+      return res.status(400).json({ error: 'Amount must be a positive number' });
+    }
+
+    // Validate stopLoss if provided
+    if (stopLoss !== undefined && (typeof stopLoss !== 'number' || stopLoss <= 0)) {
+      return res.status(400).json({ error: 'Stop loss must be a positive number' });
+    }
+
+    // Validate takeProfit if provided
+    if (takeProfit !== undefined && (typeof takeProfit !== 'number' || takeProfit <= 0)) {
+      return res.status(400).json({ error: 'Take profit must be a positive number' });
+    }
+
     const position = {
       id: `pos_${Date.now()}`,
       userId: 'user_1',
@@ -96,6 +116,7 @@ router.post('/positions', async (req: Request, res: Response) => {
       position
     });
   } catch (error) {
+    console.error('Position open error:', error);
     res.status(500).json({ error: 'Failed to open position' });
   }
 });
@@ -208,8 +229,21 @@ router.post('/calculate-position', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // Validate numeric values
+    if (typeof accountBalance !== 'number' || accountBalance <= 0) {
+      return res.status(400).json({ error: 'Account balance must be a positive number' });
+    }
+
+    if (typeof riskPercentage !== 'number' || riskPercentage <= 0 || riskPercentage > 100) {
+      return res.status(400).json({ error: 'Risk percentage must be between 0 and 100' });
+    }
+
+    if (typeof stopLossPips !== 'number' || stopLossPips <= 0) {
+      return res.status(400).json({ error: 'Stop loss pips must be a positive number' });
+    }
+
     const riskAmount = accountBalance * (riskPercentage / 100);
-    const positionSize = Math.floor(riskAmount / stopLossPips);
+    const positionSize = Math.round(riskAmount / stopLossPips); // Changed to Math.round for better precision
     
     res.status(200).json({
       currencyPair: currencyPair || 'EUR/USD',
@@ -221,6 +255,7 @@ router.post('/calculate-position', async (req: Request, res: Response) => {
       potentialLoss: riskAmount
     });
   } catch (error) {
+    console.error('Position calculation error:', error);
     res.status(500).json({ error: 'Failed to calculate position size' });
   }
 });

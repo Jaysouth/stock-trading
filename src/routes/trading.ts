@@ -73,6 +73,22 @@ router.post('/execute', async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // Validate type
+    if (type !== 'buy' && type !== 'sell') {
+      return res.status(400).json({ error: 'Type must be either "buy" or "sell"' });
+    }
+
+    // Validate module
+    const validModules = ['ai', 'group', 'self'];
+    if (!validModules.includes(module)) {
+      return res.status(400).json({ error: 'Invalid module. Must be: ai, group, or self' });
+    }
+
+    // Validate amount
+    if (typeof amount !== 'number' || amount <= 0) {
+      return res.status(400).json({ error: 'Amount must be a positive number' });
+    }
+
     const trade = {
       id: `trade_${Date.now()}`,
       userId: 'user_1',
@@ -90,6 +106,7 @@ router.post('/execute', async (req: Request, res: Response) => {
       trade
     });
   } catch (error) {
+    console.error('Trade execution error:', error);
     res.status(500).json({ error: 'Failed to execute trade' });
   }
 });
